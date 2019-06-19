@@ -9,12 +9,12 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body>
-        <div class="">
-          ajskljklaj jlaskljlkasjkl;
-        </div>
         <div id="root">
 
         </div>
+        <div id="example">
+
+        </div>
     </body>
-    <script type="text/javascript" src="js/app.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </html>

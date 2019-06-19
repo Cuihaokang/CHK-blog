@@ -1,52 +1,80 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Myweb</title>
+<html lang="{{ app()->getLocale() }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style type="text/css">
-        body{margin: 0;padding: 0;background-color: #DEDEDE;}
-        a{text-decoration:none;}
-        .header{padding:10px 50px 10px 50px;border-bottom: 1px solid #eeeeee;}
-        .header>.logo{display:inline-block;}
-        .header>.menu{display:inline-block;margin-left:20px;}
-        .content{}
-        .left{background-color: white;margin: 25px 300px 25px 25px;padding: 25px;box-shadow: 1px 1px 2px 1px #848484;}
-        .right{background-color: white;width: 200px;margin: 25px;padding: 25px;box-shadow: 1px 1px 2px 1px #848484;position: absolute;top: 92px;right: 0;}
-        .footer{padding:10px 50px 10px 50px;background-color:gray;}
-    </style>
-  </head>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <body>
-      <!-- header -->
-      <div class="header">
-          <div class="logo">
-              <a href="#"><h2>Myweb</h2></a>
-          </div>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-          <div class="menu">
-              <a href="{{ route('articles.index') }}">Articles</a>
-          </div>
-      </div>
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
 
-      <div class="content">
-          <div class="left">
-              @yield('content')
-          </div>
+                    <!-- Collapsed Hamburger -->
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
 
-          <div class="right">
-              <div style="padding:20px;border:1px solid black;">
-                  <h3>Author</h3>
-                  <p>name : chk</p>
-                  <p>age : 24</p>
-                  <p>Tel : 182-XXXX-XXXX</p>
-              </div>
-          </div>
-      </div>
+                    <!-- Branding Image -->
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                </div>
 
+                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="nav navbar-nav">
+                        &nbsp;
+                    </ul>
 
-    <!-- footer -->
-      <div class="footer">
-          <p>contact me : 1234567</p>
-      </div>
-  </body>
+                    <!-- Right Side Of Navbar -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Authentication Links -->
+                        @guest
+                            <li><a href="{{ route('login') }}">Login</a></li>
+                            <li><a href="{{ route('register') }}">Register</a></li>
+                        @else
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endguest
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        @yield('content')
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+</body>
 </html>
