@@ -10,11 +10,8 @@
     </head>
     <body>
         <div id="root">
-
-        </div>
-        <div id="example">
-
+                
         </div>
     </body>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/admin.js') }}"></script>
 </html>
