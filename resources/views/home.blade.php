@@ -50,6 +50,7 @@
               <img src="default.jpg" class="img-responsive" alt="imax1">
               <div class="z-content">
                   <p class="z-title">{{ $article->title }}</p>
+                  <p class="z-info">- 发表于 {{ $article->created_at_date }} · 最后访问 {{ $article->updated_at_diff }} -</p>
                   <p class="z-intro">{{ $article->content }}</p>
                   <div class="z-center-horizontal">
                       <a href="{{ route('articles.show', $article->id) }}" class="z-button">read more..</a>

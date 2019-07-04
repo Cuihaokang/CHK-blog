@@ -11,10 +11,10 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-          'name'=>'cui haokang',
-          'email'=>'531846872@qq.com',
-          'password'=>bcrypt('cuihaokang123'),
-        ]);
+        // DB::table('users')->insert([
+        //   'name'=>'cui haokang',
+        //   'email'=>'531846872@qq.com',
+        //   'password'=>bcrypt('cuihaokang123'),
+        // ]);
     }
 }

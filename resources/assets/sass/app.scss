@@ -83,6 +83,11 @@
             font-size: 30px;
             margin-bottom: 15px;
         }
+        .z-info{
+            text-align: center;
+            font-size: 12px;
+            color: #a1a1a1;
+        }
         .z-intro{
             color:gray;
             margin-bottom: 20px;
@@ -109,6 +114,71 @@
     line-height: 1.3;
   }
 }
+.z-info{
+    margin-bottom: 30px;
+  }
+  .z-content{
+    img{
+      max-width:100%;
+    }
+  }
+  .z-counter{
+    margin-top: 20px;
+  }
+
+//----------------------------------------------------------
+//------------------     评论
+//----------------------------------------------------------
+.z-comments{
+  .z-avatar{
+    float:left;
+    height:30px;
+    width:30px;
+  }
+  .z-avatar-text{
+    height:30px;
+    width:30px;
+    border-radius:15px;
+    background-color:gray;
+    float:left;
+    text-align:center;
+    line-height:30px;
+    color:white;
+    font-size:15px
+  }
+  .z-name{
+    line-height:30px;
+    margin-left:40px;
+    font-weight:bold;
+    font-size:17px;
+    .z-label{
+      color:#fcfcfc;
+      font-size:11px;
+      padding:5px 8px;
+      margin-left:5px;
+    }
+  }
+  .z-content{
+    margin-left:40px;
+  }
+  .z-info{
+    margin-left:40px;
+    font-size:13px;
+    color:#c8c8c8;
+  }
+  .z-reply-btn{
+    float:right;
+    font-size:16px;
+    cursor: pointer;
+  }
+  .z-reply-btn:hover{
+    color:black;
+  }
+  .z-reply{
+    margin-left:40px;
+  }
+}
+
 //----------------------------------------------------------
 //------------------     editor
 //----------------------------------------------------------
@@ -140,12 +210,13 @@
 //------------------     footer
 //----------------------------------------------------------
 .z-footer{
-    background-color: #525252;
+    background-color: #313131;
     text-align: center;
-    padding: 60px 0;
+    padding: 60px 0 40px;
     .z-text{
-        color: white;
-        font-size: 10px;
+      font-family: Miriam Libre,sans-serif;
+      color: white;
+      font-size: 10px;
     }
     .z-text-big{
         color: white;
