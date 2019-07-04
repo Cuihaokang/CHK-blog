@@ -1,5 +1,7 @@
 import React,{ Component } from 'react';
-import { Table,Input,Button, Icon } from 'antd';
+import { Table, Input, Button, Icon, Divider, message, Modal, Tooltip, Badge, Avatar } from 'antd';
+const ButtonGroup = Button.Group;
+const confirm = Modal.confirm;
 import { Link } from 'react-router-dom';
 import styles from "./Article.css";
 
@@ -15,10 +17,15 @@ export class Article extends React.Component {
       filterDropdownVisible: false,
       searchText: '',
       filtered: false,
+      //Model
+      coverModelVisible: false,
     };
   }
 
   componentWillMount() {
+    this.fetchData()
+  }
+  fetchData(){
     var that = this
     //获取文章数据
     axios.get('z/articles')
@@ -64,11 +71,86 @@ export class Article extends React.Component {
     });
   }
 
+  showCover = () =>{
+    this.setState({
+      coverModelVisible: true,
+    });
+  }
+
+  handleView = (id) =>{
+    window.open('/articles/'+id)
+  }
+  handleCancelCoverModel = () =>{
+    this.setState({
+      coverModelVisible: false,
+    });
+  }
+
+  handlePublish = (id) =>{
+    var that = this;
+    axios.get('z/articles/publish/' + id)
+    .then(function (response) {
+      if (response.status == 200) {
+        that.fetchData()
+        message.success(response.data.message)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  handleDelete = (id) =>{
+    var that = this
+    confirm({
+      title: '确认删除',
+      content: '此操作将会永久删除此文章，确认继续？',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        //获取文章数据
+        axios.get('z/articles/delete/' + id)
+        .then(function (response) {
+          if (response.status == 200) {
+            that.fetchData()
+            message.success(response.data.message)
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      },
+      onCancel() {
+        console.log('取消删除');
+      },
+    });
+
+  }
   render(){
     const columns = [{
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 50,
+    },{
+      title: '封面',
+      key: 'cover',
+      render: (text, record) => (
+        <div>
+          <Avatar shape="square" src={record.cover || 'default.jpg'} onClick={this.showCover} style={{ cursor:'pointer' }}/>
+          <Modal
+            title="封面图片"
+            visible={this.state.coverModelVisible}
+            onCancel={this.handleCancelCoverModel}
+            footer={null}
+            width="80%"
+            style={{ textAlign:'center' }}
+          >
+            <img src={record.cover || 'default.jpg'} style={{ maxWidth:'100%' }}/>
+          </Modal>
+        </div>
+      )
     },{
       title: '标题',
       key: 'title',
@@ -103,13 +185,52 @@ export class Article extends React.Component {
       dataIndex: 'content',
       key: 'content',
     },{
+      title: '状态',
+      key: 'is_hidden',
+      width: 80,
+      render: (text,record)=>{
+        if(record.is_hidden)
+          return <Badge status="warning" text="笔记" />
+        else
+          return <Badge status="processing" text="已发表" />
+      }
+    },{
+      title: '浏览量',
+      dataIndex: 'view',
+      key: 'view',
+      width: 60
+    },{
+      title: '最后访问',
+      dataIndex: 'updated_at_diff',
+      key: 'updated_at_diff',
+      width: 80
+    },{
       title: '发表时间',
       dataIndex: 'created_at',
       key: 'created_at',
+      width: 90
     },{
-      title: '更新时间',
-      dataIndex: 'updated_at',
-      key: 'updated_at',
+    title: '操作',
+    key: 'action',
+    width: 150,
+    render: (text, record) => (
+      <span>
+        <ButtonGroup>
+          <Tooltip title="预览">
+            <Button icon="link" onClick={this.handleView.bind(this, record.id)}/>
+          </Tooltip>
+          <Tooltip title="发表">
+            <Button icon="book" onClick={this.handlePublish.bind(this, record.id)}/>
+          </Tooltip>
+          <Tooltip title="置顶">
+            <Button icon="up-square-o"/>
+          </Tooltip>
+          <Tooltip title="删除">
+            <Button icon="delete" onClick={this.handleDelete.bind(this, record.id)}/>
+          </Tooltip>
+        </ButtonGroup>
+      </span>
+    ),
     },];
 
     return (
@@ -117,7 +238,7 @@ export class Article extends React.Component {
         <Link to={'/articles/create'}>
           <Button type="primary" icon="edit" style={{marginBottom:20}}>有事没事来一篇</Button>
         </Link>
-        <Table dataSource={this.state.articles} columns={columns} loading={this.state.loading} pagination={{ pageSize: 5 }}/>
+        <Table size="middle" dataSource={this.state.articles} columns={columns} loading={this.state.loading} pagination={{ pageSize: 5 }}/>
       </div>
     )
   }
