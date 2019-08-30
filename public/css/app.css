@@ -8475,7 +8475,7 @@ button.close {
 }
 
 .z-content img {
-  max-width: 100%;
+  max-width: 100vh;
 }
 
 .z-counter {

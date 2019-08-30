@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Session\DatabaseSessionHandler;
 use League\HTMLToMarkdown\HtmlConverter;
 use App\Article;
+use App\Visit;
+use App\Tag;
 use App\Comment;
 use Auth;
 
@@ -45,6 +47,7 @@ class ArticleController extends Controller
   {
     Article::update_view($id);
     $article = Article::findOrFail($id);
+    Visit::record($request, '文章', $article->title);
     $article->created_at_date = $article->created_at->toDateString();
     $comments = $article->comments()->where('parent_id', 0)->orderBy('created_at','desc')->get();
     for($i=0; $i < sizeof($comments); $i++){
@@ -82,7 +85,17 @@ class ArticleController extends Controller
    public function show_api($id)
    {
      $article = Article::findOrFail($id);
-     return $article;
+     for ($i=0; $i < sizeof($article->tags); $i++) {
+      $article->tags[$i] = $article->tags[$i]->name;
+    }
+    $tags= Tag::all();
+    for ($i=0; $i < sizeof($tags); $i++) {
+      $tags[$i] = $tags[$i]->name;
+    }
+    return response()->json([
+      'article' => $article,
+      'tags_arr' => $tags,
+    ]);
    }
   /**
    * 创建或更新文章[API]
@@ -105,7 +118,7 @@ class ArticleController extends Controller
 
      if($request->id){
        $article = Article::findOrFail($request->id);
-       $article->title = $request->title;
+       /*$article->title = $request->title;
        if (isset($request -> coverList)){
          $article->cover = $request->cover;
        }
@@ -113,10 +126,11 @@ class ArticleController extends Controller
        $article->save();
        return response()->json([
           'message' => '更新成功!'
-       ]);
+       ]);*/
+       $message = '更新成功！';
      }else{
        $article = new Article;
-       $article->title = $request->title;
+       /*$article->title = $request->title;
        $article->content= $request->content;
        if (isset($request -> coverList)){
          $article->cover = $request->cover;
@@ -124,9 +138,32 @@ class ArticleController extends Controller
        $article->save();
        return response()->json([
          'message'=>'创建成功！'
-       ]);
+       ]);*/
+       $message = '创建成功！';
      }
-   }
+      $article->title = $request->title;
+      $article->cover = $request->cover;
+      $article->content = $request->content;
+      $article->save();
+      //处理标签
+      //先删除文章关联的所有标签
+      //遍历标签，如果标签存在则添加关联，如果标签不存在先创建再添加关联
+      $article->tags()->detach();
+      for ($i=0; $i < sizeof($request->tags); $i++) {
+        $tag = Tag::where('name', $request->tags[$i])->first();
+        if ($tag) {
+          $article->tags()->attach($tag->id);
+        }else {
+          $tag = new Tag;
+          $tag->name = $request->tags[$i];
+          $tag->save();
+          $article->tags()->attach($tag->id);
+        }
+      }
+      return response()->json([
+          'message' => $message
+      ]);
+     }
 
    /**
    * 发表（或隐藏）文章 [API]
