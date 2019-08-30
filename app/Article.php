@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Article;
 
 class Article extends Model
 {
@@ -35,6 +34,14 @@ class Article extends Model
     public function comments()
     {
         return $this->hasMany('App\Comment');
+    }
+
+    /**
+     * 获得此博客文章的标签
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
     }
 
    /**

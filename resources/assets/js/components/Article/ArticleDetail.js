@@ -24,8 +24,9 @@ export class ArticleDetail extends React.Component {
     axios.get('z/articles/' + this.state.id)
     .then(function (response) {
       that.setState({
-        article:response.data,
+        article:response.data.article,
         loading:false,
+        tags_arr:response.data.tags_arr,
       })
     })
     .catch(function (error) {
@@ -43,6 +44,7 @@ export class ArticleDetail extends React.Component {
       axios.post('z/articles', {
         id:this.state.id,
         title:article.title,
+        tags:article.tags,
         cover:article.cover,
         content:article.content,
       })
@@ -73,7 +75,7 @@ export class ArticleDetail extends React.Component {
               </Breadcrumb.Item>
           </Breadcrumb>
           <Spin spinning={this.state.loading}>
-              <ArticleForm article={this.state.article} handleSubmit={this.handleSubmit.bind(this)}/>
+              <ArticleForm article={this.state.article} tags_arr={this.state.tags_arr} handleSubmit={this.handleSubmit.bind(this)}/>
           </Spin>
       </div>
    )

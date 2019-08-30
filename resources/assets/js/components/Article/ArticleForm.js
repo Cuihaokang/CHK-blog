@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Icon, Form, Input, Button, Upload, message, Modal, Badge } from 'antd';
+import { Icon, Form, Input, Button, Upload, message, Modal, Badge, Select } from 'antd';
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const Option = Select.Option;
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import styles from "./ArticleForm.css"
@@ -37,24 +38,37 @@ export class ArticleForm extends React.Component {
       //封面文件列表缓存
       coverList:[],
       //表单
-      title: props.article ? props.article.title : '',
-      cover: props.article ? props.article.cover : '',
-      content: BraftEditor.createEditorState(aaaa),
+      // title: props.article ? props.article.title : '',
+      // cover: props.article ? props.article.cover : '',
+      // content: BraftEditor.createEditorState(aaaa),
+      title: '',
+      tags: [],
+      cover: '',
+      content: '',
       //分享Modal
-      share_content: props.article ? props.article.content : 'hjkhkjh',
+      // share_content: props.article ? props.article.content : 'hjkhkjh',
+      share_content: '',
       share_type: 'html',
-      shareContentModalvisible: false
+      shareContentModalvisible: false,
+      //可选标签
+      tags_arr: [],
     };
   }
   componentWillReceiveProps(nextProps) {//新的props是传递给该方法的nextProps参数
     console.log('2');
     if (nextProps.article) {
-      console.log(nextProps.article);
+      console.log(nextProps.article.title);
       this.setState({
         title: nextProps.article.title,
+        tags: nextProps.article.tags,
         cover: nextProps.article.cover,
         content: BraftEditor.createEditorState(nextProps.article.content),
         share_content: nextProps.article.content,
+      });
+    }
+    if (nextProps.tags_arr) {
+      this.setState({
+        tags_arr: nextProps.tags_arr,
       });
     }
     this.setState({isMarkdown:nextProps.isMarkdown});
@@ -62,6 +76,9 @@ export class ArticleForm extends React.Component {
   handelTitleChange = (e) => {
     let title = this.refs.title.input.value
     this.setState({title: title})
+  }
+  handleTagsChange = (value) => {
+    this.setState({tags: value})
   }
   handleHTMLChange = (html) => {
     this.setState({
@@ -184,7 +201,7 @@ export class ArticleForm extends React.Component {
         type: 'modal',
         text: '更新封面',
         modal: {
-          id: 'my-modal',
+          id: 'cover-modal',
           title: '上传文章封面图片',
           showClose: true,
           showCancel: false,
@@ -207,6 +224,12 @@ export class ArticleForm extends React.Component {
         }
       }]
     };
+    //可选标签
+    const children = [];
+    var tags_arr = this.state.tags_arr;
+    for (var i = 0; i < tags_arr.length; i++) {
+      children.push(<Option key={tags_arr[i]}>{tags_arr[i]}</Option>);
+    }
     return (
       <Form>
         <FormItem
@@ -217,6 +240,18 @@ export class ArticleForm extends React.Component {
             ref="title"
             value={this.state.title}
             onChange={this.handelTitleChange} />
+        </FormItem>
+        <FormItem
+          {...formItemLayout}>
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="添加标签"
+            value={this.state.tags}
+            onChange={this.handleTagsChange}
+          >
+          {children}
+          </Select>
         </FormItem>
         <FormItem {...formItemLayout}>
           <div  style={{ borderRadius: 5, boxShadow: 'inset 0 0 0 0.5px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.1)'}}>
@@ -242,8 +277,9 @@ export class ArticleForm extends React.Component {
           <Button
             onClick={this.props.handleSubmit.bind(this, {
               title:this.state.title,
+              tags:this.state.tags,
               cover:this.state.cover,
-              content:this.state.content
+              content:this.state.content,
             })}
             type="primary"
             htmlType="submit"

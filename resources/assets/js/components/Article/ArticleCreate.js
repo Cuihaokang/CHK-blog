@@ -8,7 +8,23 @@ import styles from "./ArticleCreate.css"
 export class ArticleCreate extends React.Component {
   constructor(props) {
     super();
-    this.state = {}
+    this.state = {
+      tags_arr:[]
+    }
+  }
+
+  componentDidMount(props) {
+    var that = this
+    //获取文章数据
+    axios.get('z/tags')
+    .then(function (response) {
+      that.setState({
+        tags_arr:response.data.tags_arr,
+      })
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   handleSubmit(article) {
@@ -50,7 +66,7 @@ export class ArticleCreate extends React.Component {
             文章创建
           </Breadcrumb.Item>
         </Breadcrumb>
-        <ArticleForm handleSubmit={this.handleSubmit.bind(this)} />
+        <ArticleForm tags_arr={this.state.tags_arr} handleSubmit={this.handleSubmit.bind(this)} />
       </div>
     )
   }

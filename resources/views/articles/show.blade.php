@@ -13,7 +13,7 @@
                 </div>
             @endif
             <h1 class="z-title">{{ $article->title }}</h1>
-            <p class="z-info"><span style="margin-right:20px">{{$article->created_at_date}}</span>sad creeper</p>
+            <p class="z-info"><span style="margin-right:20px">{{$article->created_at_date}}</span>Cui Haokang</p>
             <div class="z-content">
               {!! $article->content !!}
             </div>
