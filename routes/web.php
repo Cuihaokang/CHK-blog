@@ -18,8 +18,11 @@ Route::get('/','HomeController@home')->name('home');
 
 Route::get('/admin','AdminController@index')->name('admin');
 
+Route::post('/articles/search', 'ArticleController@search')->name('articles.search');
+Route::get('/articles/list', 'ArticleController@list')->name('articles.list');
 Route::resource('/comments','CommentController');
 Route::resource('/articles','ArticleController');
+Route::resource('/tags', 'TagController');
 
 // Route::get('/articles', 'ArticlesController@index')->name('articles.index');
 // Route::get('/articles/create', 'ArticlesController@create')->name('articles.create');
@@ -43,4 +46,5 @@ Route::prefix('z')->group(function () {
   Route::get('/visits','VisitController@index_api');
   Route::post('/upload', 'UploadController@upload_api');
   Route::get('/tags', 'TagController@index_api');
+  Route::get('/tags/delete/{id}', 'TagController@destroy_api');
 });

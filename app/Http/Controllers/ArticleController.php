@@ -38,6 +38,44 @@ class ArticleController extends Controller
   {
     //
   }
+
+  /**
+   * 跳转全部文章页
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function list()
+  {
+    $articles = Article::where('is_hidden', 0)->orderBy('created_at', 'desc')->paginate(10);
+    for ($i=0; $i < sizeof($articles); $i++) {
+      $articles[$i]->content = str_limit(strip_tags($articles[$i]->content), 150);
+      $articles[$i]->created_at_date = $articles[$i]->created_at->toDateString();
+      $articles[$i]->updated_at_diff = $articles[$i]->updated_at->diffForHumans();
+    }
+    $tags = Tag::all();
+    return view('articles.list', compact('articles', 'tags'));
+  }
+
+  /**
+   * 搜索文章
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function search(Request $request)
+  {
+    $key = $request->key;
+    $articles = Article::when($key, function($query) use ($key){
+      return $query->where('title', 'like', '%'.$key.'%');
+    })->where('is_hidden', 0)->orderBy('created_at', 'desc')->paginate(10);
+    for ($i=0; $i < sizeof($articles); $i++) {
+      $articles[$i]->content = str_limit(strip_tags($articles[$i]->content), 150);
+      $articles[$i]->created_at_date = $articles[$i]->created_at->toDateString();
+      $articles[$i]->updated_at_diff = $articles[$i]->updated_at->diffForHumans();
+    }
+    $tags = Tag::all();
+    return view('articles.list', compact('articles', 'tags'));
+  }
+
  /**
    * 跳转某个文章
    *
@@ -52,11 +90,11 @@ class ArticleController extends Controller
     $comments = $article->comments()->where('parent_id', 0)->orderBy('created_at','desc')->get();
     for($i=0; $i < sizeof($comments); $i++){
       $comments[$i]->created_at_diff = $comments[$i]->created_at->diffForHumans();
-      $comments[$i]->avatar_text = $comments[$i]->name[0];
+      $comments[$i]->avatar_text = $comments[$i]->avatar_text = mb_substr($comments[$i]->name,0,1,'utf-8');
       $replys = $comments[$i]->replys;
       for ($j=0; $j < sizeof($replys); $j++) {
         $replys[$j]->created_at_diff = $replys[$j]->created_at->diffForHumans();
-        $replys[$j]->avatar_text = $replys[$j]->name[0];
+        $replys[$j]->avatar_text = mb_substr($replys[$j]->name,0,1,'utf-8');
       }
     }
 
