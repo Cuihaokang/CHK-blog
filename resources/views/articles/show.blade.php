@@ -107,6 +107,16 @@
     </div>
   </div>
 </div>
+
+<!-- img Modal -->
+<div class="modal fade bs-example-modal-lg" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="max-width:100%">
+  <div class="modal-dialog" style="width:100%" role="document">
+    <div class="modal-content" style="text-align:center;background-color:rgba(0,0,0,0.5)">
+      <img id="imgModalImage" src="" alt="" style="max-width:100%">
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -126,6 +136,15 @@
         modal.find('#target_name').val('')
         modal.find('#content').attr("placeholder", "")
       }
+  })
+
+  $("img").click(function(){
+    $('#imgModalImage').attr('src', this.src)
+    $('#imgModal').modal('show')
+  });
+  
+  $('#imgModal').click(function(){
+    $('#imgModal').modal('hide')
   })
 </script>
 @endsection
