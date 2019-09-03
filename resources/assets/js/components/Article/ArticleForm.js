@@ -41,6 +41,7 @@ export class ArticleForm extends React.Component {
       // title: props.article ? props.article.title : '',
       // cover: props.article ? props.article.cover : '',
       // content: BraftEditor.createEditorState(aaaa),
+      id: 0,
       title: '',
       tags: [],
       cover: '',
@@ -59,6 +60,7 @@ export class ArticleForm extends React.Component {
     if (nextProps.article) {
       console.log(nextProps.article.title);
       this.setState({
+        id: nextProps.article.id,
         title: nextProps.article.title,
         tags: nextProps.article.tags,
         cover: nextProps.article.cover,
@@ -183,6 +185,7 @@ export class ArticleForm extends React.Component {
       height: 350,
       contentFormat:'html',
       initialContent: this.state.content,
+      contentId: this.state.id,
       onHTMLChange: this.handleHTMLChange,
       placeholder: "输入文章内容",
       media:{

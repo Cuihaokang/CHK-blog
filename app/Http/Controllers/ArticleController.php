@@ -83,14 +83,14 @@ class ArticleController extends Controller
    */
   public function show(Request $request, $id)
   {
-    Article::update_view($id);
     $article = Article::findOrFail($id);
-    Visit::record($request, '文章', $article->title);
+    // Visit::record($request, '文章', $article->title);
+    $article->increment('view');
     $article->created_at_date = $article->created_at->toDateString();
     $comments = $article->comments()->where('parent_id', 0)->orderBy('created_at','desc')->get();
     for($i=0; $i < sizeof($comments); $i++){
       $comments[$i]->created_at_diff = $comments[$i]->created_at->diffForHumans();
-      $comments[$i]->avatar_text = $comments[$i]->avatar_text = mb_substr($comments[$i]->name,0,1,'utf-8');
+      $comments[$i]->avatar_text = $comments [$i]->avatar_text = mb_substr($comments[$i]->name,0,1,'utf-8');
       $replys = $comments[$i]->replys;
       for ($j=0; $j < sizeof($replys); $j++) {
         $replys[$j]->created_at_diff = $replys[$j]->created_at->diffForHumans();
@@ -165,7 +165,7 @@ class ArticleController extends Controller
        return response()->json([
           'message' => '更新成功!'
        ]);*/
-       $message = '更新成功！';
+       $message = '更新成功!！';
      }else{
        $article = new Article;
        /*$article->title = $request->title;
@@ -180,7 +180,10 @@ class ArticleController extends Controller
        $message = '创建成功！';
      }
       $article->title = $request->title;
-      $article->cover = $request->cover;
+      /*$article->cover = $request->cover;*/
+      if (isset($request -> coverList)){
+        $article->cover = $request->cover;
+      }
       $article->content = $request->content;
       $article->save();
       //处理标签
@@ -225,6 +228,30 @@ class ArticleController extends Controller
        ]);
      }
    }
+
+   /**
+   * 置顶文章 [API]
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function top_api($id)
+  {
+    $article = Article::findOrFail($id);
+    if ($article->is_top) {
+      $article->is_top = 0;
+      $article->save();
+      return response()->json([
+          'message' => '文章已取消置顶！'
+      ]);
+    }else {
+      $article->is_top = 1;
+      $article->save();
+      return response()->json([
+          'message' => '文章已置顶！'
+      ]);
+    }
+  }
+
    /**
    * 删除文章 [API]
    *

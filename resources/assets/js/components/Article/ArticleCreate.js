@@ -36,7 +36,8 @@ export class ArticleCreate extends React.Component {
     //创建文章
     axios.post('z/articles', {
       title: article.title,
-
+      tags: article.tags,
+      cover:article.cover,
       content:article.content,
     })
     .then(function (response) {
