@@ -15,19 +15,6 @@ class Article extends Model
     'title','cover','content','is_top','is_hidden','view','comment'
   ];
 
-  /**
-   * 更新浏览量
-   * @var [int]
-   */
-   static public function update_view($id)
-   {
-     $article = Article::findOrFail($id);
-     $article->view = $article->view +1;
-     $article->update([
-       'view' => $article->view,
-     ]);
-   }
-
    /**
      * 获得此博客文章的评论
      */
