@@ -15,11 +15,11 @@ class AdminController extends Controller
     *
     *@return void
     */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    //     $this->middleware('super');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('super');
+    }
     /**
     *show the appliction admin;
     *
@@ -64,7 +64,7 @@ class AdminController extends Controller
       $articles_today = DB::table('articles')->whereDate('created_at', Carbon::today()->toDateString())->count();
       $comments_count = DB::table('comments')->count();
       $comments_today = DB::table('comments')->whereDate('created_at', Carbon::today()->toDateString())->count();
-      
+
       return response()->json([
         'visits_count' => $visits_count,
         'visits_arr' => (array)$visits_arr,

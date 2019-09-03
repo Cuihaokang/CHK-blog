@@ -19,3 +19,7 @@
   border-radius: 6px;
   margin: 16px;
 }
+
+.layout__header__right__name{
+    margin-left: 5px;
+}
