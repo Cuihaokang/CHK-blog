@@ -14,27 +14,39 @@ import { User } from './User/User';
 import { Setting } from './Setting/Setting';
 import styles from "./Main.css";
 
-const avatarOnClick = function ({ key }) {
+//头像下拉菜单处理
+const avatarOnClick = function({key}){
   switch (key) {
+    case 'personal':
+      // location.hash = '#/settings/personal';
+      break;
     case 'logout':
-      message.info(`TODO 退出登录`);
-      //TODO 退出登录
+      axios.post('logout')
+      .then(function (response) {
+        location.reload()
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
       break;
-    default:
-      break;
+    default: break;
   }
 };
+//头像下拉菜单
 const menu = (
   <Menu onClick={avatarOnClick}>
-    <Menu.Item key="0">
-      <a href="http://www.alipay.com/">支付宝</a>
+    <Menu.Item key="version">
+      <Icon type="crown" />
+      <span>版本 1.0.10</span>
     </Menu.Item>
-    <Menu.Item key="1">
-      <a href="http://www.taobao.com/">淘宝</a>
+    <Menu.Item key="personal">
+      <Icon type="user" />
+      <span>博主设置</span>
     </Menu.Item>
     <Menu.Divider />
     <Menu.Item key="logout">
-      <Icon type="logout" /> 退出登录
+      <Icon type="logout" />
+      <span>退出登录</span>
     </Menu.Item>
   </Menu>
 );
